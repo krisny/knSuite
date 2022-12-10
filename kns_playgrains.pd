@@ -1,13 +1,13 @@
 #N canvas 0 23 1034 728 12;
 #X obj 27 18 inlet;
 #X obj 29 625 outlet~;
-#N canvas 45 599 922 768 graindetails 0;
+#N canvas 45 599 922 768 graindetails 1;
 #X obj 258 341 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 10
--262144 -1 -1 0 256;
+-262144 -1 -1 24.8 256;
 #X obj 468 359 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 10
 -262144 -1 -1 0 256;
 #X obj 99 342 nbx 5 14 -1e+37 1e+37 0 0 empty empty empty 0 -8 0 10
--262144 -1 -1 0 256;
+-262144 -1 -1 103089 256;
 #X obj 274 82 route range;
 #X obj 363 82 route range;
 #X obj 564 107 route range;
@@ -54,23 +54,23 @@
 #X obj 88 162 * 0;
 #X obj 88 184 + 24;
 #X text 133 170 selecting a number from a range using X tilt data;
-#X obj 135 68 t b l;
 #X obj 290 99 receive DancePitch;
+#X obj 135 68 t b list;
 #X connect 0 0 9 0;
 #X connect 1 0 2 0;
 #X connect 1 0 12 1;
 #X connect 1 1 2 1;
 #X connect 2 0 11 1;
-#X connect 4 0 14 0;
+#X connect 4 0 15 0;
 #X connect 7 0 8 0;
 #X connect 8 0 1 0;
 #X connect 9 0 10 0;
 #X connect 10 0 11 0;
 #X connect 11 0 12 0;
 #X connect 12 0 3 0;
-#X connect 14 0 9 0;
-#X connect 14 1 1 0;
-#X connect 15 0 1 0;
+#X connect 14 0 1 0;
+#X connect 15 0 9 0;
+#X connect 15 1 1 0;
 #X restore 468 272 pd tiltselectFromRange;
 #X obj 274 17 receive ranges;
 #X obj 274 44 route /audiobuffer /durationrange /pitchrange;
@@ -154,6 +154,7 @@
 #X obj 120 467 pack 0 0 0 0 0;
 #X obj 682 366 random 20;
 #X obj 662 405 + 80;
+#X msg 155 86 range 1 200;
 #X connect 0 0 25 2;
 #X connect 1 0 25 3;
 #X connect 2 0 25 1;
@@ -180,10 +181,12 @@
 #X connect 18 0 2 0;
 #X connect 19 0 18 1;
 #X connect 20 0 24 0;
+#X connect 20 0 28 0;
 #X connect 24 0 3 0;
 #X connect 25 0 9 0;
 #X connect 26 0 27 0;
 #X connect 27 0 25 4;
+#X connect 28 0 4 0;
 #X restore 29 149 pd graindetails;
 #X obj 276 24 inlet, f 6;
 #X obj 29 182 route 0 1 2 3 4 5, f 89;
