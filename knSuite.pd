@@ -1,0 +1,457 @@
+#N canvas 1523 531 1072 631 12;
+#N canvas 224 693 1499 425 pulse 1;
+#X obj 55 121 phasor~;
+#X obj 55 173 send~ pulse;
+#X obj 55 44 r loopfrekvens_sekunder;
+#X floatatom 74 74 5 0 0 0 - - -;
+#X obj 337 212 threshold~ 0;
+#X obj 337 187 fexpr~ $x1[-1] - $x1[0];
+#X obj 337 237 send loopstart;
+#X obj 668 86 *~;
+#X obj 668 179 threshold~ 0;
+#X obj 668 154 fexpr~ $x1[-1] - $x1[0];
+#X obj 668 110 wrap~;
+#X floatatom 692 48 5 0 0 0 - - -;
+#X obj 668 204 send periodictrigger;
+#X msg 792 42 32;
+#X obj 836 59 loadbang;
+#X connect 0 0 1 0;
+#X connect 0 0 5 0;
+#X connect 0 0 7 0;
+#X connect 2 0 0 0;
+#X connect 2 0 3 0;
+#X connect 4 0 6 0;
+#X connect 5 0 4 0;
+#X connect 7 0 10 0;
+#X connect 8 0 12 0;
+#X connect 9 0 8 0;
+#X connect 10 0 9 0;
+#X connect 11 0 7 1;
+#X connect 13 0 11 0;
+#X connect 14 0 13 0;
+#X restore 88 68 pd pulse;
+#X floatatom 334 45 5 0 0 0 bpm - bpm;
+#X floatatom 607 54 5 1 64 0 beats_in_loop - beats_in_loop;
+#N canvas 1319 59 970 685 test 1;
+#X obj 40 575 throw~ test;
+#X obj 71 33 receive~ pulse;
+#X obj 37 449 *~;
+#X obj 38 504 tabread4~ /audiobuffer1;
+#X obj 104 416 r loopperiode_samples;
+#X obj 271 500 tabread4~ /audiobuffer2;
+#X obj 538 3 ctlin;
+#X floatatom 243 195 5 0 0 0 - - -;
+#X obj 56 251 +~;
+#X obj 247 247 vline~;
+#X obj 50 375 wrap~;
+#X obj 233 92 t i i;
+#X obj 249 139 -;
+#N canvas 1766 831 450 300 speedlim 0;
+#X obj 46 8 inlet;
+#X obj 46 154 spigot;
+#X obj 46 178 t l b, f 18;
+#X obj 46 202 outlet;
+#X obj 81 89 timer;
+#X obj 179 16 loadbang;
+#X obj 61 64 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 46 32 t l b;
+#X obj 81 113 >= 30;
+#X connect 0 0 7 0;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 2 1 4 0;
+#X connect 4 0 8 0;
+#X connect 5 0 4 0;
+#X connect 6 0 4 0;
+#X connect 7 0 1 0;
+#X connect 7 1 4 1;
+#X connect 8 0 1 1;
+#X restore 232 54 pd speedlim;
+#X floatatom 234 23 5 0 0 0 - - -;
+#X msg 243 218 \$1 150 \, 0 0 100;
+#X obj 243 171 * 0.015;
+#X obj 539 32 pack 0 0;
+#X msg 539 56 \$2 \$1;
+#X obj 63 344 +~;
+#X obj 539 80 route 41 42;
+#X floatatom 575 256 5 0 0 0 - - -;
+#X floatatom 576 115 5 0 0 0 - - -;
+#X obj 576 138 / 127;
+#X obj 576 162 - 0.5;
+#X msg 575 279 \$1 100;
+#X obj 574 311 line~;
+#X text 277 104 scratching;
+#X text 630 280 loop_offset;
+#X obj 576 186 expr abs($f1)*$f1/0.5;
+#X obj 575 220 expr if(abs($f1)>0.005 \, $f1 \, 0);
+#X connect 1 0 8 0;
+#X connect 2 0 5 0;
+#X connect 3 0 0 0;
+#X connect 4 0 2 1;
+#X connect 5 0 0 0;
+#X connect 6 0 17 0;
+#X connect 6 1 17 1;
+#X connect 7 0 15 0;
+#X connect 8 0 19 0;
+#X connect 9 0 8 1;
+#X connect 10 0 2 0;
+#X connect 11 0 12 1;
+#X connect 11 1 12 0;
+#X connect 12 0 16 0;
+#X connect 13 0 11 0;
+#X connect 14 0 13 0;
+#X connect 15 0 9 0;
+#X connect 16 0 7 0;
+#X connect 17 0 18 0;
+#X connect 18 0 20 0;
+#X connect 19 0 10 0;
+#X connect 20 0 14 0;
+#X connect 20 1 22 0;
+#X connect 21 0 25 0;
+#X connect 22 0 23 0;
+#X connect 23 0 24 0;
+#X connect 24 0 29 0;
+#X connect 25 0 26 0;
+#X connect 26 0 19 1;
+#X connect 29 0 30 0;
+#X connect 30 0 21 0;
+#X restore 586 541 pd test;
+#N canvas 292 156 1848 1168 buffersetup 1;
+#X obj 36 40 receive loopperiode_samples;
+#X msg 36 98 \; /audiobuffer1 resize \$1;
+#X obj 36 215 table /audiobuffer1 88200;
+#X msg 514 98 \; /audiobuffer2 resize \$1;
+#X obj 539 213 table /audiobuffer2 88200;
+#X obj 983 236 soundfiler;
+#X text 1024 165 load sound file;
+#X obj 983 179 symbol;
+#N canvas 0 23 644 287 select-sample 0;
+#X msg 62 91 piano.wav;
+#X msg 158 91 melodius.wav;
+#X msg 255 91 beat.wav;
+#X msg 351 91 humanistiske.wav;
+#X obj 62 63 sel 0 1 2 3 4, f 81;
+#X msg 461 91 bass.wav;
+#X obj 62 192 outlet;
+#X obj 62 27 inlet;
+#X connect 0 0 6 0;
+#X connect 1 0 6 0;
+#X connect 2 0 6 0;
+#X connect 3 0 6 0;
+#X connect 4 0 0 0;
+#X connect 4 1 1 0;
+#X connect 4 2 2 0;
+#X connect 4 3 3 0;
+#X connect 4 4 5 0;
+#X connect 5 0 6 0;
+#X connect 7 0 4 0;
+#X restore 983 142 pd select-sample;
+#X msg 983 202 read \$1 /audiobuffer2;
+#X msg 540 316 \; /audiobuffer2 const 0;
+#X msg 1256 139 100bpm44p1k2bars.wav;
+#X msg 1258 176 100bpm48k2bars.wav;
+#X msg 1253 211 120bpm44p1k2bars.wav;
+#X msg 1261 260 120bpm48k2bars.wav;
+#X obj 41 434 adc~, f 7;
+#X msg 32 323 \; /audiobuffer1 const 0;
+#X obj 26 2616 vsnapshot~;
+#X obj 26 2568 threshold~;
+#X obj 36 2626 vsnapshot~;
+#X obj 36 2578 threshold~;
+#X obj 46 2636 vsnapshot~;
+#X obj 46 2588 threshold~;
+#X obj 56 2646 vsnapshot~;
+#X obj 56 2598 threshold~;
+#X text 178 434 toggle record;
+#X obj 143 436 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 532 467 kns_recordToBuffer /audiobuffer2;
+#X obj 533 420 adc~, f 7;
+#X text 682 415 toggle record;
+#X obj 647 417 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 41 500 kns_recordToBuffer /audiobuffer1;
+#X connect 0 0 1 0;
+#X connect 0 0 3 0;
+#X connect 7 0 9 0;
+#X connect 8 0 7 0;
+#X connect 9 0 5 0;
+#X connect 11 0 7 0;
+#X connect 12 0 7 0;
+#X connect 13 0 7 0;
+#X connect 14 0 7 0;
+#X connect 15 0 31 0;
+#X connect 26 0 31 1;
+#X connect 28 0 27 0;
+#X connect 30 0 27 1;
+#X restore 785 141 pd buffersetup;
+#N canvas 73 667 1763 655 globalvariables 1;
+#X floatatom 497 83 5 0 0 0 bpm - -;
+#X floatatom 699 280 5 0 0 0 loopfrekvens_sekunder - loopfrekvens_sekunder
+;
+#X obj 743 124 t b f;
+#X obj 698 256 expr ($f1/60)/$f2;
+#X obj 499 61 r bpm;
+#X floatatom 306 265 5 0 0 0 beatfrekvens_sekunder - beatfrekvens_sekunder
+;
+#X obj 305 241 expr ($f1/60);
+#X floatatom 257 141 5 0 0 0 beatperiode_sekunder - beatperiode_sekunder
+;
+#X obj 256 117 expr (60/$f1);
+#X floatatom 1029 316 5 0 0 0 loopperiode_sekunder - loopperiode_sekunder
+;
+#X obj 1028 292 expr (60/$f1)*$f2;
+#X obj 1189 98 samplerate~;
+#X obj 1189 71 r pd-dsp-started;
+#X floatatom 1190 139 7 0 0 0 samplerate - samplerate;
+#X obj 1325 368 * 44100;
+#X obj 1325 318 r loopperiode_sekunder;
+#X obj 1615 273 r samplerate;
+#X obj 1615 297 t b f;
+#X floatatom 1325 426 7 0 0 0 loopperiode_samples - loopperiode_samples
+;
+#X text 65 15 Number boxes send values;
+#X obj 743 60 r beats_in_loop;
+#X obj 1401 423 v loopperiode_samples;
+#X obj 1006 434 v loopperiode_ms;
+#X obj 1104 320 * 1000;
+#X floatatom 1105 357 5 0 0 0 loopperiode_ms - loopperiode_ms;
+#X connect 0 0 3 0;
+#X connect 0 0 6 0;
+#X connect 0 0 8 0;
+#X connect 0 0 10 0;
+#X connect 2 0 3 0;
+#X connect 2 0 10 0;
+#X connect 2 1 3 1;
+#X connect 2 1 10 1;
+#X connect 3 0 1 0;
+#X connect 4 0 0 0;
+#X connect 6 0 5 0;
+#X connect 8 0 7 0;
+#X connect 10 0 9 0;
+#X connect 10 0 23 0;
+#X connect 11 0 13 0;
+#X connect 12 0 11 0;
+#X connect 14 0 18 0;
+#X connect 15 0 14 0;
+#X connect 16 0 17 0;
+#X connect 17 0 14 0;
+#X connect 17 1 14 1;
+#X connect 20 0 2 0;
+#X connect 23 0 24 0;
+#X restore 265 197 pd globalvariables;
+#X obj 80 570 dac~;
+#X obj 95 467 catch~ test;
+#X obj 94 520 *~ 0.1;
+#X text 856 47 todo (file read samplerate);
+#N canvas 396 40 826 683 window-stuff 0;
+#X obj 83 96 + 1;
+#X obj 103 278 route 1;
+#X obj 103 254 pack, f 7;
+#X obj 142 375 pack, f 8;
+#X msg 142 303 \$2;
+#X obj 142 353 > 383;
+#X obj 103 232 < 129;
+#X obj 142 400 route 1;
+#X obj 181 424 t b;
+#X msg 153 477 1;
+#X obj 103 442 / 511;
+#X obj 103 481 * 2;
+#X obj 116 151 < 512;
+#X obj 83 178 spigot;
+#X obj 84 10 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 2 133 del 1;
+#X obj 169 69 sel 0;
+#X msg 169 116 -1;
+#X obj 83 59 i -1;
+#X obj 169 93 del 1;
+#X obj 103 566 expr if ($i2 \, sqrt($f1) \, $f1);
+#X obj 264 546 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X text 283 546 toggle to enable sqrt of hanning;
+#X text 102 9 bang to write window;
+#X obj 83 207 t b f f f, f 13;
+#X obj 83 124 t f f;
+#X obj 142 326 t f f, f 8;
+#X obj 102 606 tabwrite window;
+#N canvas 0 22 635 415 (subpatch) 0;
+#X array window 512 float 1;
+#A 0 0 0.000151157 0.00060457 0.00135997 0.00241691 0.00377476 0.00543267
+0.00738966 0.00964454 0.012196 0.0150424 0.0181821 0.0216131 0.0253334
+0.0293408 0.0336328 0.0382068 0.04306 0.0481896 0.0535924 0.0592651
+0.0652044 0.0714067 0.077868 0.0845847 0.0915525 0.0987674 0.106225
+0.113921 0.12185 0.130007 0.138389 0.146989 0.155803 0.164825 0.174049
+0.183471 0.193084 0.202882 0.212861 0.223012 0.233332 0.243813 0.254448
+0.265232 0.276158 0.28722 0.29841 0.309722 0.321149 0.332684 0.344321
+0.356051 0.367869 0.379766 0.391736 0.403772 0.415866 0.428011 0.440199
+0.452423 0.464677 0.476951 0.48924 0.501535 0.513829 0.526115 0.538385
+0.550631 0.562847 0.575025 0.587158 0.599238 0.611258 0.623211 0.635089
+0.646886 0.658593 0.670205 0.681714 0.693113 0.704395 0.715554 0.726582
+0.737473 0.748221 0.758818 0.76926 0.779538 0.789647 0.799581 0.809334
+0.818899 0.828272 0.837447 0.846417 0.855178 0.863724 0.87205 0.880151
+0.888023 0.895659 0.903057 0.91021 0.917116 0.923769 0.930166 0.936303
+0.942176 0.947782 0.953117 0.958178 0.962961 0.967465 0.971686 0.975622
+0.979271 0.982629 0.985696 0.988469 0.990946 0.993127 0.995009 0.996592
+0.997875 0.998857 0.999537 0.999915 0.999991 1 1 1 1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+1 1 1 1 1 1 0.999915 0.999537 0.998857 0.997876 0.996593 0.99501 0.993128
+0.990948 0.988471 0.985698 0.982631 0.979273 0.975625 0.971689 0.967468
+0.962965 0.958181 0.95312 0.947786 0.94218 0.936307 0.93017 0.923774
+0.917121 0.910215 0.903062 0.895665 0.888029 0.880157 0.872056 0.86373
+0.855184 0.846424 0.837454 0.828279 0.818907 0.80934 0.799588 0.789654
+0.779545 0.769267 0.758826 0.748229 0.737482 0.72659 0.715562 0.704403
+0.693121 0.681723 0.670214 0.658602 0.646895 0.635098 0.62322 0.611267
+0.599247 0.587167 0.575035 0.562857 0.55064 0.538393 0.526124 0.513838
+0.501544 0.489249 0.476961 0.464686 0.452432 0.440208 0.42802 0.415875
+0.403781 0.391746 0.379775 0.367877 0.35606 0.344329 0.332693 0.321158
+0.309731 0.298419 0.287228 0.276166 0.26524 0.254456 0.24382 0.23334
+0.22302 0.212868 0.202889 0.193091 0.183478 0.174056 0.164831 0.15581
+0.146996 0.138395 0.130013 0.121855 0.113926 0.106231 0.098773 0.091558
+0.0845895 0.0778727 0.0714112 0.0652089 0.0592695 0.0535966 0.0481936
+0.0430635 0.0382101 0.0336359 0.0293438 0.0253363 0.0216157 0.0181845
+0.0150445 0.0121979 0.00964627 0.00739118 0.00543401 0.00377586 0.0024178
+0.00136065 0.000604987 0.000151366 0;
+#X coords 0 1 511 0 100 50 1 0 0;
+#X restore 292 84 graph;
+#X obj 369 428 expr 0.5 * (1 + cos((3.14159 + 3.14159*2* $f1)));
+#X obj 103 516 expr 0.5 * (1 + cos((3.14159 + 3.14159*2* $f1)));
+#X connect 0 0 18 1;
+#X connect 0 0 25 0;
+#X connect 1 0 10 0;
+#X connect 1 1 4 0;
+#X connect 2 0 1 0;
+#X connect 3 0 7 0;
+#X connect 4 0 26 0;
+#X connect 5 0 3 0;
+#X connect 6 0 2 0;
+#X connect 7 0 10 0;
+#X connect 7 1 8 0;
+#X connect 8 0 9 0;
+#X connect 9 0 27 0;
+#X connect 10 0 11 0;
+#X connect 11 0 30 0;
+#X connect 12 0 13 1;
+#X connect 12 0 16 0;
+#X connect 13 0 24 0;
+#X connect 14 0 18 0;
+#X connect 15 0 18 0;
+#X connect 16 0 19 0;
+#X connect 17 0 18 1;
+#X connect 18 0 0 0;
+#X connect 19 0 17 0;
+#X connect 20 0 27 0;
+#X connect 21 0 20 1;
+#X connect 24 0 15 0;
+#X connect 24 1 6 0;
+#X connect 24 2 2 1;
+#X connect 24 3 27 1;
+#X connect 25 0 13 0;
+#X connect 25 1 12 0;
+#X connect 26 0 5 0;
+#X connect 26 1 3 1;
+#X connect 30 0 20 0;
+#X restore 244 553 pd window-stuff;
+#N canvas 996 410 1301 670 control_ranges 0;
+#X obj 83 20 ctlin;
+#X obj 80 61 pack 0 0 0;
+#X msg 80 85 \$3 \$2 \$1;
+#X obj 79 114 route 3;
+#X floatatom 79 291 5 0 0 0 - - -;
+#X obj 80 328 expr loopperiode_samples * $f1/127;
+#X floatatom 359 242 5 0 0 0 - - -;
+#X floatatom 359 321 12 0 0 0 - - -;
+#X obj 360 279 expr loopperiode_samples * $f1/127/2;
+#X obj 359 344 t b f;
+#X obj 80 415 expr $f1-$f2 \; $f1+$f2;
+#X obj 168 469 clip 1;
+#X obj 258 405 r loopperiode_samples;
+#X obj 258 429 - 1;
+#X obj 80 471 clip 1;
+#X obj 80 510 pack 0 0;
+#X msg 80 534 \; ranges /audiobuffer range \$1 \$2;
+#X floatatom 665 287 5 0 0 0 - - -;
+#X floatatom 945 238 5 0 0 0 - - -;
+#X floatatom 945 317 12 0 0 0 - - -;
+#X obj 945 340 t b f;
+#X obj 666 411 expr $f1-$f2 \; $f1+$f2;
+#X obj 666 506 pack 0 0;
+#X obj 79 146 route 21 22 23 24, f 140;
+#X msg 666 530 \; ranges /durationrange range \$1 \$2;
+#X obj 869 500 print;
+#X obj 844 401 r loopperiode_ms;
+#X floatatom 692 373 5 0 0 0 - - -;
+#X obj 666 467 clip 1 1000;
+#X obj 755 465 clip 1 1000;
+#X floatatom 888 440 5 0 0 0 - - -;
+#X obj 666 324 expr loopperiode_ms * pow(($f1/127) \, 2);
+#X obj 946 275 expr loopperiode_ms * $f1/127/10;
+#X connect 0 0 1 0;
+#X connect 0 1 1 1;
+#X connect 0 2 1 2;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X connect 3 0 23 0;
+#X connect 4 0 5 0;
+#X connect 5 0 10 0;
+#X connect 6 0 8 0;
+#X connect 7 0 9 0;
+#X connect 8 0 7 0;
+#X connect 9 0 10 0;
+#X connect 9 1 10 1;
+#X connect 10 0 14 0;
+#X connect 10 1 11 0;
+#X connect 11 0 15 1;
+#X connect 12 0 13 0;
+#X connect 13 0 11 2;
+#X connect 13 0 14 2;
+#X connect 14 0 15 0;
+#X connect 15 0 16 0;
+#X connect 17 0 31 0;
+#X connect 18 0 32 0;
+#X connect 19 0 20 0;
+#X connect 20 0 21 0;
+#X connect 20 1 21 1;
+#X connect 21 0 25 0;
+#X connect 21 0 28 0;
+#X connect 21 1 29 0;
+#X connect 22 0 24 0;
+#X connect 22 0 25 0;
+#X connect 23 0 4 0;
+#X connect 23 1 6 0;
+#X connect 23 2 17 0;
+#X connect 23 3 18 0;
+#X connect 26 0 28 2;
+#X connect 26 0 29 2;
+#X connect 26 0 30 0;
+#X connect 28 0 22 0;
+#X connect 28 0 25 0;
+#X connect 29 0 22 1;
+#X connect 31 0 21 0;
+#X connect 31 0 27 0;
+#X connect 32 0 19 0;
+#X restore 851 306 pd control_ranges;
+#X msg 542 288 \; playthru \$1;
+#X obj 546 248 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 96 211 r periodictrigger;
+#X obj 7 325 kns_playgrains /audiobuffer1;
+#X obj 127 253 kns_playgrains /audiobuffer1;
+#X obj 271 365 kns_playgrains /audiobuffer1;
+#X connect 7 0 8 0;
+#X connect 8 0 6 0;
+#X connect 8 0 6 1;
+#X connect 13 0 12 0;
+#X connect 14 0 15 0;
+#X connect 14 0 16 0;
+#X connect 14 0 17 0;
+#X connect 15 0 8 0;
+#X connect 16 0 8 0;
+#X connect 17 0 8 0;
